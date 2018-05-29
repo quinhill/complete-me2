@@ -16,6 +16,7 @@ const dictionary = fs.readFileSync(text).toString().trim().split('\n');
     it('should have default values', () => {
       assert.deepEqual(trie.root, new Node());
       assert.equal(trie.counter, 0);
+      assert.deepEqual(trie.suggestions, [])
     });
 
     describe('Insert', () => {
@@ -39,10 +40,10 @@ const dictionary = fs.readFileSync(text).toString().trim().split('\n');
         assert.equal(trie.count(), 1);
       })
     })
+
     describe('Populate', () => {
       it('should insert an array of words', () => {
         let array = ['hello', 'goodbye', 'firefighter', 'poopyface', 'turducken'];
-
         trie.populate(array);
 
         assert.equal(trie.counter, 5);
@@ -53,6 +54,12 @@ const dictionary = fs.readFileSync(text).toString().trim().split('\n');
 
         assert.equal(trie.counter, 234371)
       })
+
+      it.skip('should suggest() words from the dictionary', () => {
+        trie.populate(dictionary);
+
+        assert.deepEqual(trie.suggest('zapa'), ['zapara', 'zaparan', 'zaparo', 'zaparoan', 'zapas', 'zapatero']);
+      });
     })
 
     describe('Suggest', () => {
@@ -61,6 +68,34 @@ const dictionary = fs.readFileSync(text).toString().trim().split('\n');
         trie.suggest('pi');
 
         assert.deepEqual(trie.suggestions, ['pizza', 'pizzaria'])
+      })
+
+      it('should return an empty array if no matching words are in the trie', () => {
+        trie.populate(['pizza', 'pizzaria'])
+
+        trie.suggest('ok')
+        assert.deepEqual(trie.suggestions, [])
+      })
+    })
+
+    describe('Optimize', () => {
+      it('should compact the data from nodes with a single child into its parent node', () => {
+        trie.populate(['cake', 'caketopper', 'cherry', 'chi'])
+
+        trie.optimize();
+
+        assert.deepEqual(trie.root.children.c.children.a.data, 'ake')
+      })
+    })
+
+    describe('Expand', () => {
+      it('should split nodes that have been optimized back into single letter nodes', () => {
+        trie.populate(['cake', 'caketopper', 'cherry', 'chi'])
+        trie.optimize();
+        assert.deepEqual(trie.root.children.c.children.a.data, 'ake')
+
+        trie.expand();
+        assert.deepEqual(trie.root.children.c.children.a.data, 'a');
       })
     })
   });
