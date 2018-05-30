@@ -1,7 +1,6 @@
 {
-  "name": "tdd",
+  "name": "@quinhill/complete-me",
   "version": "1.0.0",
-  "description": "",
   "main": "lib/index.js",
   "directories": {
     "lib": "lib",
@@ -17,7 +16,7 @@
     "url": "git+https://github.com/quinhill/tdd.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "quinhill",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/quinhill/tdd/issues"
@@ -37,6 +36,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
-    "mocha": "^5.1.1"
-  }
+    "mocha": "^5.1.1",
+    "webpack-cli": "^2.1.4"
+  },
+  "description": ""
 }
